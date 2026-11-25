@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Who Wrote the Beat?</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter, Playfair Display, Caveat, JetBrains Mono, Great Vibes (Calligraphy) -->
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Great+Vibes&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --spotify-green: #1db954;
+      --neon-pink: #ff2a5f;
+      --amber-gold: #0b7cf5;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    .font-serif-editorial {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+    .font-handwriting {
+      font-family: 'Caveat', cursive;
+    }
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .font-calligraphy {
+      font-family: 'Great Vibes', cursive;
+    }
+
+    /* Fluid Aurora Background for Module 1 */
+    .aurora-bg {
+      background: radial-gradient(circle at 20% 25%, rgba(29, 185, 84, 0.28) 0%, transparent 45%),
+                  radial-gradient(circle at 80% 30%, rgba(139, 92, 246, 0.32) 0%, transparent 50%),
+                  radial-gradient(circle at 50% 80%, rgba(245, 158, 11, 0.25) 0%, transparent 50%),
+                  #06080f;
+      background-size: 160% 160%;
+      animation: auroraFlow 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes auroraFlow {
+      0% { background-position: 0% 20%; }
+      50% { background-position: 100% 80%; }
+      100% { background-position: 20% 100%; }
+    }
+
+    /* 3D Spinning Vinyl Record & Morphing to Top-Left */
+    #vinyl-wrapper {
+      position: fixed;
+      z-index: 60;
+      transition: all 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+      perspective: 1200px;
+    }
+
+    /* Center state (Module 1) */
+    #vinyl-wrapper.state-hero {
+      top: 52%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      width: 390px;
+      height: 390px;
+    }
+
+    /* Corner Mini Button state (Modules 2-6) */
+    #vinyl-wrapper.state-corner {
+      top: 18px;
+      left: 20px;
+      transform: translate(0, 0) scale(0.21);
+      transform-origin: top left;
+      width: 390px;
+      height: 390px;
+      cursor: pointer;
+    }
+
+    #vinyl-wrapper.state-corner:hover {
+      transform: translate(0, 0) scale(0.235);
+      filter: drop-shadow(0 0 25px rgba(56, 189, 248, 0.7));
+    }
+
+    .vinyl-disc {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      position: relative;
+      background: 
+        conic-gradient(
+          from 0deg,
+          #111 0deg,
+          #292929 35deg,
+          #0d0d0d 75deg,
+          #1f1f1f 130deg,
+          #0c0c0c 180deg,
+          #2c2c2c 220deg,
+          #0f0f0f 275deg,
+          #222 320deg,
+          #111 360deg
+        );
+      box-shadow: 
+        0 25px 70px rgba(0, 0, 0, 0.85),
+        0 0 50px rgba(56, 189, 248, 0.22),
+        inset 0 0 0 8px #080808,
+        inset 0 0 0 9px rgba(255,255,255,0.08);
+      animation: spinVinyl 9s linear infinite;
+      transform-style: preserve-3d;
+    }
+
+    /* Realistic Grooves */
+    .vinyl-grooves {
+      position: absolute;
+      inset: 18px;
+      border-radius: 50%;
+      background: repeating-radial-gradient(
+        circle at center,
+        rgba(255, 255, 255, 0.045) 0px,
+        rgba(255, 255, 255, 0.045) 1px,
+        transparent 2px,
+        transparent 5px
+      );
+      pointer-events: none;
+    }
+
+    @keyframes spinVinyl {
+      from { transform: rotateX(14deg) rotateZ(0deg); }
+      to { transform: rotateX(14deg) rotateZ(360deg); }
+    }
+
+    /* Center Interactive Button on Vinyl — LIGHT BLUE */
+    .vinyl-center-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 146px;
+      height: 146px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #bae6fd 0%, #38bdf8 65%, #0c4a6e 100%);
+      border: 4px solid #e0f2fe;
+      box-shadow: 0 0 30px rgba(56, 189, 248, 0.8), inset 0 0 15px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .vinyl-center-btn:hover {
+      transform: translate(-50%, -50%) scale(1.07);
+      box-shadow: 0 0 45px rgba(125, 211, 252, 1), inset 0 0 15px rgba(0,0,0,0.4);
+    }
+
+    .spindle-hole {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #07090e;
+      border: 2px solid rgba(255,255,255,0.45);
+    }
+
+    /* Tonearm */
+    .tonearm {
+      position: absolute;
+      top: -20px;
+      right: -35px;
+      width: 120px;
+      height: 240px;
+      pointer-events: none;
+      transition: transform 0.7s ease, opacity 0.4s ease;
+      transform-origin: 85px 32px;
+      transform: rotate(18deg);
+    }
+    #vinyl-wrapper.state-corner .tonearm {
+      opacity: 0;
+    }
+
+    /* Module Screen Container */
+    .module-screen {
+      display: none;
+      min-height: 100vh;
+      width: 100%;
+      padding: 88px 20px 110px;
+      opacity: 0;
+      transition: opacity 0.45s ease;
+    }
+
+    .module-screen.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+    }
+
+    /* Conveyor Belt Animation (Module 2 Right) */
+    @keyframes conveyorMove {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .conveyor-track {
+      display: flex;
+      width: 200%;
+      animation: conveyorMove 5.5s linear infinite;
+    }
+
+    /* Rising Smoke Particles (Module 2 Right Belt) */
+    @keyframes smokeRise {
+      0% { transform: translateY(0) scale(0.8); opacity: 0.75; }
+      100% { transform: translateY(-28px) scale(1.55); opacity: 0; }
+    }
+    .smoke-puff {
+      animation: smokeRise 2.2s ease-out infinite;
+    }
+
+    /* Module 4: Letter Explosion & Letter-to-Label Pop */
+    .shatter-letter {
+      display: inline-block;
+      transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.65s ease, color 0.3s;
+    }
+
+    .letter-label-pill {
+      opacity: 0;
+      transform: translateY(-18px) scale(0.75);
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease;
+    }
+    .letter-label-pill.revealed {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Module 4 Animation 2: Slower Cinematic Camera, Coins, Bot Straws, Alarm & Dust */
+    #heistCameraTrack {
+      transition: transform 1.85s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes trackFlyRight {
+      0% { transform: translateX(-20px) scale(0.7); opacity: 0; }
+      20% { opacity: 1; }
+      85% { opacity: 1; }
+      100% { transform: translateX(260px) scale(0.95); opacity: 0; }
+    }
+    .flying-ai-track {
+      position: absolute;
+      left: 0;
+      animation: trackFlyRight 2s linear infinite;
+    }
+
+    @keyframes goldCoinConverge {
+      0% { transform: translate(var(--cx), var(--cy)) scale(0.6); opacity: 0; }
+      20% { opacity: 1; }
+      85% { opacity: 1; }
+      100% { transform: translate(0, 115px) scale(1); opacity: 0; }
+    }
+    .gold-coin-drop {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      font-size: 16px;
+      pointer-events: none;
+      filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.9));
+      animation: goldCoinConverge 1.6s ease-in infinite;
+    }
+
+    @keyframes strawSuckFlow {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 -24px; }
+    }
+    .bot-straw-pipe {
+      width: 5px;
+      height: 100%;
+      border-radius: 3px;
+      background: repeating-linear-gradient(
+        180deg,
+        #f43f5e 0px,
+        #fb7185 6px,
+        #be123c 12px,
+        #fde047 15px,
+        #f43f5e 24px
+      );
+      box-shadow: 0 0 8px rgba(244, 63, 94, 0.85);
+      animation: strawSuckFlow 0.55s linear infinite;
+      transition: transform 0.65s ease, opacity 0.65s ease;
+    }
+    .bot-straw-pipe.severed {
+      transform: translateY(70px) rotate(18deg) scaleY(0.4);
+      opacity: 0;
+      animation: none;
+    }
+
+    @keyframes redAlarmFlash {
+      0%, 100% { box-shadow: inset 0 0 0 0 rgba(239, 68, 68, 0); }
+      50% { box-shadow: inset 0 0 75px 14px rgba(239, 68, 68, 0.65); }
+    }
+    .alarm-active {
+      animation: redAlarmFlash 0.75s ease-in-out infinite;
+    }
+
+    @keyframes crashShake {
+      0%, 100% { transform: translate(0, 0); }
+      20% { transform: translate(-5px, 3px); }
+      40% { transform: translate(5px, -3px); }
+      60% { transform: translate(-4px, -2px); }
+      80% { transform: translate(4px, 2px); }
+    }
+    .crash-shake {
+      animation: crashShake 0.45s ease-in-out 3;
+    }
+
+    .dust-shard {
+      display: inline-block;
+      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.1s ease;
+    }
+
+    /* Studio Hardware Brushed Metal (Module 5) */
+    .brushed-metal {
+      background: 
+        repeating-linear-gradient(
+          90deg,
+          rgba(255,255,255,0.015) 0px,
+          rgba(255,255,255,0.015) 1px,
+          transparent 1px,
+          transparent 3px
+        ),
+        linear-gradient(180deg, #1e2430 0%, #11151d 50%, #0b0e14 100%);
+      box-shadow: 
+        inset 0 2px 3px rgba(255,255,255,0.12),
+        inset 0 -4px 10px rgba(0,0,0,0.8),
+        0 25px 60px rgba(0,0,0,0.9);
+      border: 2px solid #2e3646;
+    }
+
+    /* Custom Vertical Fader Styling */
+    .fader-slot {
+      width: 18px;
+      height: 190px;
+      background: #06080c;
+      border-radius: 9px;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.95), 0 0 0 1px rgba(255,255,255,0.08);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .fader-fill {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      border-radius: 9px;
+      background: linear-gradient(0deg, #ef4444, #f59e0b);
+      transition: height 0.22s ease, background 0.3s ease, box-shadow 0.3s ease;
+    }
+    .fader-fill.half {
+      background: linear-gradient(0deg, #d97706, #fbbf24);
+      box-shadow: 0 0 14px rgba(251, 191, 36, 0.65);
+    }
+    .fader-fill.maxed {
+      background: linear-gradient(0deg, #059669, #10b981, #34d399);
+      box-shadow: 0 0 18px #10b981;
+    }
+
+    .fader-cap {
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, 50%);
+      width: 54px;
+      height: 28px;
+      border-radius: 5px;
+      background: linear-gradient(180deg, #475569 0%, #1e293b 45%, #0f172a 55%, #334155 100%);
+      border: 1px solid #94a3b8;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      transition: bottom 0.22s ease, border-color 0.3s, box-shadow 0.3s;
+      z-index: 10;
+    }
+    .fader-cap::after {
+      content: '';
+      width: 34px;
+      height: 3px;
+      background: #f8fafc;
+      border-radius: 2px;
+      box-shadow: 0 0 6px #fff;
+    }
+    .fader-cap.half {
+      border-color: #fbbf24;
+      box-shadow: 0 0 16px rgba(251, 191, 36, 0.55), 0 6px 14px rgba(0,0,0,0.85);
+    }
+    .fader-cap.half::after {
+      background: #fbbf24;
+      box-shadow: 0 0 8px #fbbf24;
+    }
+    .fader-cap.maxed {
+      border-color: #34d399;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.7), 0 6px 14px rgba(0,0,0,0.85);
+    }
+    .fader-cap.maxed::after {
+      background: #34d399;
+      box-shadow: 0 0 8px #34d399;
+    }
+
+    /* Confetti Celebration Overlay (Module 5) */
+    #confetti-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 100;
+    }
+    .confetti-piece {
+      position: absolute;
+      top: -16px;
+      border-radius: 2px;
+      opacity: 0.95;
+      animation: confettiFall var(--dur) cubic-bezier(0.15, 0.65, 0.35, 1) forwards;
+    }
+    @keyframes confettiFall {
+      0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+        opacity: 1;
+      }
+      85% {
+        opacity: 1;
+      }
+      100% {
+        transform: translate3d(var(--drift), 105vh, 0) rotate(var(--spin));
+        opacity: 0;
+      }
+    }
+
+    /* Laser Sweep Animation for Module 5 Monitor */
+    @keyframes laserSweep {
+      0% { top: -10%; opacity: 1; }
+      90% { top: 105%; opacity: 1; }
+      100% { top: 105%; opacity: 0; }
+    }
+    .laser-line {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: #10b981;
+      box-shadow: 0 0 20px 6px #10b981;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 30;
+    }
+    .laser-line.sweeping {
+      animation: laserSweep 1.1s ease-in-out forwards;
+    }
+
+    /* Module 6 Blue Finale Atmosphere */
+    .finale-blue-bg {
+      background-color: #050a14;
+      background-image: 
+        radial-gradient(circle at 50% 42%, rgba(56, 189, 248, 0.24) 0%, rgba(37, 99, 235, 0.14) 38%, rgba(5, 10, 20, 0.98) 74%);
+    }
+
+    .blue-gradient-word {
+      background: linear-gradient(90deg, #f0f9ff 0%, #7dd3fc 35%, #38bdf8 70%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 24px rgba(56, 189, 248, 0.55));
+    }
+  </style>
+</head>
+<body class="aurora-bg" id="mainBody">
+
+  <!-- Confetti Layer -->
+  <div id="confetti-container"></div>
+
+  <!-- =====================================================================
+       PERSISTENT 3D SPINNING VINYL (HERO IN MODULE 1 -> TOP-LEFT IN 2..6)
+       ===================================================================== -->
+  <div id="vinyl-wrapper" class="state-hero" onclick="handleVinylClick(event)">
+    <!-- Tonearm SVG -->
+    <svg class="tonearm" viewBox="0 0 120 240" fill="none">
+      <circle cx="85" cy="32" r="22" fill="#334155" stroke="#94a3b8" stroke-width="3"/>
+      <circle cx="85" cy="32" r="10" fill="#0f172a"/>
+      <path d="M85 32 L42 185 L22 212" stroke="#cbd5e1" stroke-width="6" stroke-linecap="round"/>
+      <rect x="12" y="202" width="18" height="26" rx="3" transform="rotate(25 12 202)" fill="#f59e0b" stroke="#fef3c7" stroke-width="2"/>
+    </svg>
+
+    <!-- Rotating Disc -->
+    <div class="vinyl-disc">
+      <div class="vinyl-grooves"></div>
+      <!-- Subtle Light Sheen -->
+      <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none"></div>
+
+      <!-- Center Press Button (text removed, light blue) -->
+      <button id="vinylEnterBtn" class="vinyl-center-btn" title="Click to Enter or Return Home">
+        <div class="spindle-hole"></div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Top-Right Module Progress Pill -->
+  <div id="topModuleIndicator" class="fixed top-6 right-6 z-50 hidden items-center gap-2 bg-slate-900/85 border border-white/10 px-4 py-2 rounded-full backdrop-blur-md shadow-lg">
+    <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+    <span id="topModuleText" class="text-xs font-mono-code uppercase tracking-wider text-slate-300">MODULE 02 / 06</span>
+  </div>
+
+  <!-- =====================================================================
+       MODULE 1: 3D VINYL LANDING SCREEN (TEXT TRIMMED)
+       ===================================================================== -->
+  <section id="module-1" class="module-screen active relative">
+    <div class="max-w-4xl w-full text-center flex flex-col items-center justify-between min-h-[82vh] z-10 pointer-events-none">
+      <!-- Top Title Header — only the title remains -->
+      <div class="mt-2">
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white drop-shadow-lg">
+          Who Wrote the Beat?
+        </h1>
+      </div>
+
+      <!-- Spacer for the 3D Vinyl in the center -->
+      <div class="h-[370px] w-full"></div>
+
+      <!-- Bottom Prompt — only this instruction remains -->
+      <div class="pointer-events-auto flex flex-col items-center">
+        <p class="text-sky-300/90 text-xs sm:text-sm font-mono-code tracking-wider uppercase animate-pulse">
+          ▲ Click the Center of the Vinyl Record to Enter ▲
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       MODULE 2: COMPARE THE AUDIOS (3-COLUMN BLIND TEST LAYOUT)
+       ===================================================================== -->
+  <section id="module-2" class="module-screen">
+    <div class="max-w-7xl w-full mx-auto">
+      <div class="text-center mb-8">
+        <span class="text-xs font-mono-code uppercase tracking-widest text-amber-400">Module 02</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold mt-1">Compare the Audios</h2>
+      </div>
+
+      <!-- ===================================================================
+           AUDIO SOURCES (Local MP3 files in the same directory)
+           =================================================================== -->
+      <audio id="audioHuman" src="human-song.mp3" preload="metadata"></audio>
+      <audio id="audioAI" src="ai-song.mp3" preload="metadata"></audio>
+
+      <!-- 3-COLUMN LAYOUT: LEFT (HUMAN) | CENTER (2 MATCHING AUDIO CARDS) | RIGHT (AI) -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+
+        <!-- ===============================================================
+             LEFT COLUMN: HUMAN SONGWRITING TRAITS (WITH 3 REAL JPG PHOTOS)
+             =============================================================== -->
+        <div class="rounded-2xl bg-gradient-to-br from-amber-950/60 via-stone-900 to-stone-950 border-2 border-amber-500/40 p-5 shadow-2xl flex flex-col justify-between gap-4">
+          <div>
+            <span class="px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 rounded-full border border-amber-400/30">
+              Human Creation
+            </span>
+            <h3 class="text-xl font-bold text-amber-100 mt-1.5">How Humans Write Music</h3>
+          </div>
+
+          <!-- Photo 1 (Wide): Guitar & Crumpled Drafts -->
+          <div class="relative rounded-xl overflow-hidden border border-amber-500/30 shadow-lg group">
+            <img src="human-drafts.jpg" alt="Songwriter with guitar and crumpled music drafts" class="w-full h-36 object-cover transition duration-500 group-hover:scale-105" />
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-3 py-2">
+              <span class="text-[11px] font-mono-code font-bold text-amber-200">✏️ Trial, Error &amp; Crumpled Drafts</span>
+            </div>
+          </div>
+
+          <!-- Photo 2 & 3 (Side by Side): Handwritten Notes & Studio Mixing -->
+          <div class="grid grid-cols-2 gap-3">
+            <div class="relative rounded-xl overflow-hidden border border-amber-500/30 shadow-lg group">
+              <img src="human-notes.jpg" alt="Hand writing musical notes with pencil" class="w-full h-32 object-cover transition duration-500 group-hover:scale-105" />
+              <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-2.5 py-1.5">
+                <span class="text-[10px] font-mono-code font-bold text-amber-200">🎼 Handwritten Score</span>
+              </div>
+            </div>
+            <div class="relative rounded-xl overflow-hidden border border-amber-500/30 shadow-lg group">
+              <img src="human-studio.jpg" alt="Producer mixing music in recording studio" class="w-full h-32 object-cover transition duration-500 group-hover:scale-105" />
+              <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-2.5 py-1.5">
+                <span class="text-[10px] font-mono-code font-bold text-amber-200">🎚️ Real Studio Craft</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Heartbeat Waveform -->
+          <div class="bg-black/60 rounded-xl p-3 border border-amber-500/30">
+            <div class="flex justify-between text-[10px] font-mono-code text-amber-400 mb-1">
+              <span>💓 EMOTIONAL DYNAMICS</span>
+              <span>LIVING PULSE</span>
+            </div>
+            <svg class="w-full h-12 stroke-amber-400" viewBox="0 0 500 70" fill="none">
+              <path id="ecgPath" d="M 0 35 L 40 35 L 55 15 L 68 58 L 82 6 L 96 64 L 110 28 L 125 35 L 180 35 L 195 18 L 210 55 L 226 4 L 240 66 L 255 22 L 270 35 L 330 35 L 348 12 L 362 60 L 378 8 L 392 62 L 408 35 L 500 35" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- ===============================================================
+             CENTER COLUMN: TWO MATCHING BLIND-TEST AUDIO BOXES (AUDIO A / AUDIO B)
+             =============================================================== -->
+        <div class="flex flex-col justify-center gap-6">
+
+          <!-- AUDIO BOX A (NEUTRAL COLOR, NO SONG TITLE) -->
+          <div class="flex-1 rounded-2xl bg-slate-900/90 border-2 border-indigo-400/40 p-6 shadow-2xl flex flex-col items-center justify-center text-center gap-5">
+            <div>
+              <h3 class="text-3xl font-extrabold text-white tracking-tight">Audio A</h3>
+              <p class="text-xs font-mono-code text-slate-400 mt-1.5">Who wrote this track?</p>
+            </div>
+            <button id="btnPlayLeft" onclick="toggleAudio('human')" class="w-full max-w-[220px] px-6 py-3 rounded-full bg-indigo-500 hover:bg-indigo-400 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 transition transform hover:scale-105">
+              <span id="iconPlayLeft">▶</span> <span id="textPlayLeft">Play Audio A</span>
+            </button>
+          </div>
+
+          <!-- AUDIO BOX B (IDENTICAL NEUTRAL COLOR, NO SONG TITLE) -->
+          <div class="flex-1 rounded-2xl bg-slate-900/90 border-2 border-indigo-400/40 p-6 shadow-2xl flex flex-col items-center justify-center text-center gap-5">
+            <div>
+              <h3 class="text-3xl font-extrabold text-white tracking-tight">Audio B</h3>
+              <p class="text-xs font-mono-code text-slate-400 mt-1.5">Who wrote this track?</p>
+            </div>
+            <button id="btnPlayRight" onclick="toggleAudio('ai')" class="w-full max-w-[220px] px-6 py-3 rounded-full bg-indigo-500 hover:bg-indigo-400 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 transition transform hover:scale-105">
+              <span id="iconPlayRight">▶</span> <span id="textPlayRight">Play Audio B</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- ===============================================================
+             RIGHT COLUMN: AI GENERATION TRAITS
+             =============================================================== -->
+        <div class="rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-cyan-950/40 border-2 border-cyan-500/40 p-5 shadow-2xl flex flex-col justify-between gap-4">
+          <div>
+            <span class="px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider bg-cyan-500/20 text-cyan-300 rounded-full border border-cyan-400/30">
+              AI Generation
+            </span>
+            <h3 class="text-xl font-bold text-cyan-100 mt-1.5">How AI Generates Music</h3>
+          </div>
+
+          <!-- Visual 1: Scraped Pop Artists Training Database -->
+          <div class="bg-slate-950 rounded-xl p-3.5 border border-cyan-500/30 relative overflow-hidden">
+            <div class="flex justify-between items-center text-[10px] font-mono-code text-cyan-300 mb-2.5">
+              <span>🗄️ TRAINING DATABASE</span>
+              <span class="text-rose-400 animate-pulse">SCRAPING • 0% ROYALTY</span>
+            </div>
+            <div class="flex flex-wrap gap-1.5 text-[10px] font-mono-code">
+              <span class="px-2 py-1 rounded bg-slate-900 border border-cyan-500/25 text-slate-200">Taylor Swift</span>
+              <span class="px-2 py-1 rounded bg-slate-900 border border-cyan-500/25 text-slate-200">Justin Bieber</span>
+              <span class="px-2 py-1 rounded bg-slate-900 border border-cyan-500/25 text-slate-200">Charlie Puth</span>
+              <span class="px-2 py-1 rounded bg-slate-900 border border-cyan-500/25 text-slate-200">Billie Eilish</span>
+              <span class="px-2 py-1 rounded bg-slate-900 border border-cyan-500/25 text-slate-200">The Weeknd</span>
+              <span class="px-2 py-1 rounded bg-slate-900 border border-cyan-500/25 text-slate-200">Ariana Grande</span>
+              <span class="px-2 py-1 rounded bg-slate-900 border border-cyan-500/25 text-slate-200">Adele</span>
+              <span class="px-2 py-1 rounded bg-slate-900 border border-cyan-500/25 text-slate-200">Ed Sheeran</span>
+              <span class="px-2 py-1 rounded bg-slate-900 border border-cyan-500/25 text-slate-200">Drake</span>
+              <span class="px-2 py-1 rounded bg-slate-900 border border-cyan-500/25 text-slate-200">Olivia Rodrigo</span>
+              <span class="px-2 py-1 rounded bg-slate-900 border border-cyan-500/25 text-slate-200">Dua Lipa</span>
+              <span class="px-2 py-1 rounded bg-slate-900 border border-cyan-500/25 text-slate-200">Bruno Mars</span>
+              <span class="px-2 py-1 rounded bg-slate-900 border border-cyan-500/25 text-slate-200">Sabrina Carpenter</span>
+              <span class="px-2 py-1 rounded bg-rose-950/60 border border-rose-500/40 text-rose-300">+40,000 more...</span>
+            </div>
+          </div>
+
+          <!-- Visual 2: Mass-Production Conveyor Belt with Rising Smoke Emojis -->
+          <div class="bg-slate-950/90 rounded-xl p-3.5 border border-cyan-500/20 relative overflow-hidden">
+            <!-- Rising Smoke Puffs -->
+            <div class="absolute top-1 left-28 text-base smoke-puff pointer-events-none">💨</div>
+            <div class="absolute top-2 right-20 text-sm smoke-puff pointer-events-none" style="animation-delay: 0.7s;">💨</div>
+            <div class="absolute top-1 right-10 text-base smoke-puff pointer-events-none" style="animation-delay: 1.4s;">💨</div>
+
+            <div class="flex justify-between text-[10px] font-mono-code text-cyan-300 mb-2 relative z-10">
+              <span>🏭 MASS-PRODUCTION BELT 💨🔥</span>
+              <span class="text-rose-400">1,000 / MIN</span>
+            </div>
+            <div class="overflow-hidden relative py-1">
+              <div class="conveyor-track gap-2.5">
+                <div class="px-3 py-1.5 bg-slate-800 border border-cyan-500/40 rounded text-[10px] font-mono-code text-cyan-200 shrink-0">📦 Clone #001 💨</div>
+                <div class="px-3 py-1.5 bg-slate-800 border border-cyan-500/40 rounded text-[10px] font-mono-code text-cyan-200 shrink-0">📦 Clone #002 💨</div>
+                <div class="px-3 py-1.5 bg-slate-800 border border-cyan-500/40 rounded text-[10px] font-mono-code text-cyan-200 shrink-0">📦 Clone #003 💨</div>
+                <div class="px-3 py-1.5 bg-slate-800 border border-cyan-500/40 rounded text-[10px] font-mono-code text-cyan-200 shrink-0">📦 Clone #004 💨</div>
+                <div class="px-3 py-1.5 bg-slate-800 border border-cyan-500/40 rounded text-[10px] font-mono-code text-cyan-200 shrink-0">📦 Clone #001 💨</div>
+                <div class="px-3 py-1.5 bg-slate-800 border border-cyan-500/40 rounded text-[10px] font-mono-code text-cyan-200 shrink-0">📦 Clone #002 💨</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visual 3: AI Machine Photo (AI-machine.jpg) -->
+          <div class="relative rounded-xl overflow-hidden border border-cyan-500/30 shadow-lg group">
+            <img src="AI-machine.jpg" alt="Robotic hands typing on a keyboard to generate music" class="w-full h-36 object-cover transition duration-500 group-hover:scale-105" />
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-3 py-2">
+              <span class="text-[11px] font-mono-code font-bold text-cyan-200">🤖 Automated Algorithmic Output</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       MODULE 3: MINI QUICK-FIRE QUIZ
+       ===================================================================== -->
+  <section id="module-3" class="module-screen">
+    <div class="max-w-3xl w-full mx-auto">
+      <div class="text-center mb-8">
+        <span class="text-xs font-mono-code uppercase tracking-widest text-emerald-400">Module 03</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold mt-1">A Little Question</h2>
+      </div>
+
+      <div class="bg-slate-900/90 border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+          <span class="text-xs font-mono-code uppercase text-amber-400">Question</span>
+          <span class="text-xs text-slate-400">Select the correct match</span>
+        </div>
+
+        <h3 class="text-xl sm:text-2xl font-bold text-white leading-snug">
+          Which audio was written by a living human, and which was generated by an AI algorithm?
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <button onclick="answerQuiz(true, this)" class="quiz-opt text-left p-5 rounded-xl bg-slate-800/80 hover:bg-slate-800 border-2 border-white/10 transition group">
+            <div class="text-xs font-mono-code text-amber-400 mb-1">OPTION A</div>
+            <div class="font-bold text-base text-white group-hover:text-amber-300">
+              Audio A is Human-Composed;<br>Audio B is AI-Generated.
+            </div>
+            <p class="text-xs text-slate-400 mt-2">
+              Audio A carries organic tempo shifts and lived vulnerability; Audio B is a mathematically quantized assembly-line clone.
+            </p>
+          </button>
+
+          <button onclick="answerQuiz(false, this)" class="quiz-opt text-left p-5 rounded-xl bg-slate-800/80 hover:bg-slate-800 border-2 border-white/10 transition group">
+            <div class="text-xs font-mono-code text-cyan-400 mb-1">OPTION B</div>
+            <div class="font-bold text-base text-white group-hover:text-cyan-300">
+              Audio A is AI-Generated;<br>Audio B is Human-Composed.
+            </div>
+            <p class="text-xs text-slate-400 mt-2">
+              Because Audio B has a cleaner, more uniform grid, it must be made by a professional human composer.
+            </p>
+          </button>
+        </div>
+
+        <!-- Quiz Reveal Box -->
+        <div id="quizFeedback" class="hidden rounded-xl p-5 border">
+          <h4 id="quizFeedbackTitle" class="text-lg font-extrabold mb-3"></h4>
+          <div class="text-sm text-slate-200 bg-black/40 p-4 rounded-lg border border-white/10 leading-relaxed">
+            Although AI music and human music can be hard to tell apart, there are still ways we can support human musicians.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       MODULE 4: STYLE-LAUNDERING & ROYALTY STEALING
+       ===================================================================== -->
+  <section id="module-4" class="module-screen">
+    <div class="max-w-6xl w-full mx-auto">
+      <div class="text-center mb-6">
+        <span class="text-xs font-mono-code uppercase tracking-widest text-rose-400">Module 04</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold mt-1">Style-laundering &amp; Royalty stealing</h2>
+      </div>
+
+      <!-- Scene Switcher Tabs -->
+      <div class="flex justify-center gap-4 mb-6">
+        <button id="tabScene1" onclick="switchStoryScene(1)" class="px-5 py-2.5 rounded-full font-bold text-sm bg-rose-500 text-white shadow-lg shadow-rose-500/30 transition">
+          🎬 Animation 1
+        </button>
+        <button id="tabScene2" onclick="switchStoryScene(2)" class="px-5 py-2.5 rounded-full font-bold text-sm bg-slate-800 text-slate-300 hover:bg-slate-700 border border-white/10 transition">
+          💰 Animation 2
+        </button>
+      </div>
+
+      <!-- ===============================================================
+           ANIMATION SCENE 1: ARTIST NAME EXPLODES -> EACH LETTER MAPS TO A LABEL
+           =============================================================== -->
+      <div id="storyScene1" class="bg-slate-900/90 border-2 border-white/15 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-white/10 pb-4">
+          <div>
+            <span class="text-xs font-mono-code uppercase text-rose-400">01. Style laundering</span>
+            <h3 class="text-xl font-bold text-white">Turning Artist Names into Labels</h3>
+          </div>
+          <button onclick="runTaylorSwiftAnimation()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-slate-950 font-black text-sm shadow-lg transition transform hover:scale-105">
+            ▶ Play the animation
+          </button>
+        </div>
+
+        <!-- Step 1: Frosted Glass Search Input Box -->
+        <div class="max-w-2xl mx-auto mb-6">
+          <div id="promptSearchBox" class="backdrop-blur-xl bg-white/10 border-2 border-white/20 rounded-2xl p-4 flex items-center justify-between shadow-inner transition-all duration-300">
+            <div class="flex items-center gap-3 text-base sm:text-xl font-mono-code">
+              <span class="text-slate-400">PROMPT &gt;</span>
+              <span id="typedPrefix" class="text-white">Write a song like </span>
+              <!-- Shattering Letters Container -->
+              <span id="taylorLetters" class="font-extrabold text-amber-300 inline-block">
+                <span class="shatter-letter">T</span><span class="shatter-letter">a</span><span class="shatter-letter">y</span><span class="shatter-letter">l</span><span class="shatter-letter">o</span><span class="shatter-letter">r</span><span class="shatter-letter">&nbsp;</span><span class="shatter-letter">S</span><span class="shatter-letter">w</span><span class="shatter-letter">i</span><span class="shatter-letter">f</span><span class="shatter-letter">t</span>
+              </span>
+              <span class="w-2.5 h-6 bg-emerald-400 inline-block animate-pulse"></span>
+            </div>
+            <span class="text-xs font-mono-code px-2.5 py-1 rounded bg-white/10 text-slate-300">ENTER ↵</span>
+          </div>
+
+          <!-- Copyright Infringement Alert Flash -->
+          <div id="copyrightAlertBox" class="hidden mt-3 px-4 py-2 rounded-xl bg-rose-600/30 border border-rose-500 text-rose-200 text-xs font-mono-code text-center animate-bounce">
+            ⚠️ COPYRIGHT INFRINGEMENT ALERT! Direct artist name detected — Shattering name into generic style labels...
+          </div>
+        </div>
+
+        <!-- Step 2: Each Exploded Letter Transforms into a Matching Style Label -->
+        <div id="tagPillsZone" class="min-h-[140px] flex flex-col items-center justify-center gap-4 pt-2">
+          <!-- Row 1: T A Y L O R -->
+          <div id="letterLabelsRow1" class="flex flex-wrap items-center justify-center gap-2.5"></div>
+          <!-- Row 2: S W I F T -->
+          <div id="letterLabelsRow2" class="flex flex-wrap items-center justify-center gap-2.5"></div>
+        </div>
+      </div>
+
+      <!-- ===============================================================
+           ANIMATION SCENE 2: CINEMATIC ROYALTY POOL HEIST & SPAM FILTER GATE
+           =============================================================== -->
+      <div id="storyScene2" class="hidden bg-slate-900/90 border-2 border-white/15 rounded-2xl p-6 sm:p-7 shadow-2xl relative overflow-hidden">
+        <!-- Minimal Header -->
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-5 border-b border-white/10 pb-4">
+          <div>
+            <span class="text-xs font-mono-code uppercase text-amber-400">02. Royalty stealing</span>
+            <h3 class="text-xl font-bold text-white">The Shared Royalty Pool Heist</h3>
+          </div>
+          <button id="btnPlayHeist" onclick="runRoyaltyHeistAnimation()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-rose-500 hover:from-amber-300 hover:to-rose-400 text-slate-950 font-black text-sm shadow-lg transition transform hover:scale-105">
+            ▶ Play the animation
+          </button>
+        </div>
+
+        <!-- CINEMATIC VIEWPORT (Fixed height camera window that pans smoothly from Beat 1 to Beat 2..5) -->
+        <div id="heistViewport" class="relative w-full h-[460px] rounded-2xl bg-[#070a12] border border-white/10 overflow-hidden shadow-inner">
+          <!-- Red Alarm Flash Overlay -->
+          <div id="heistRedAlarmBanner" class="hidden absolute top-3 left-1/2 -translate-x-1/2 z-40 px-4 py-1.5 rounded-full bg-rose-600 text-white font-mono-code font-black text-xs tracking-widest shadow-[0_0_25px_#f43f5e] animate-pulse">
+            🚨 RED ALARM • SPAM DETECTED
+          </div>
+
+          <!-- Vertically Panning Camera Track (2 scenes x 460px = 920px) -->
+          <div id="heistCameraTrack" class="w-full" style="transform: translateY(0px);">
+
+            <!-- =========================================================
+                 CAMERA 1 (TOP 460px): AI MASS-GENERATION -> SPOTIFY
+                 ========================================================= -->
+            <div class="h-[460px] w-full flex flex-col items-center justify-center px-6 relative">
+              <div class="grid grid-cols-1 md:grid-cols-3 items-center gap-6 w-full max-w-4xl">
+                <!-- Left: Person + AI Generator -->
+                <div class="bg-slate-950/90 border-2 border-cyan-500/40 rounded-2xl p-6 text-center shadow-xl">
+                  <div class="text-5xl mb-3">🧑‍💻🤖</div>
+                  <div class="text-xs font-mono-code uppercase text-cyan-300 font-bold">AI Song Generator</div>
+                  <div id="aiGenCounter" class="text-2xl font-black font-mono-code text-white mt-2">0 tracks</div>
+                </div>
+
+                <!-- Middle: Flying Generated Tracks Stream -->
+                <div class="relative h-28 flex items-center justify-center overflow-hidden">
+                  <div id="flyingTracksStream" class="relative w-full h-full opacity-30 transition-opacity duration-500">
+                    <div class="flying-ai-track top-2 px-2.5 py-1 rounded bg-rose-500/25 border border-rose-400/50 text-[10px] font-mono-code text-rose-200">🎵 AI #01</div>
+                    <div class="flying-ai-track top-10 px-2.5 py-1 rounded bg-cyan-500/25 border border-cyan-400/50 text-[10px] font-mono-code text-cyan-200" style="animation-delay:0.5s;">🎵 AI #402</div>
+                    <div class="flying-ai-track top-18 px-2.5 py-1 rounded bg-rose-500/25 border border-rose-400/50 text-[10px] font-mono-code text-rose-200" style="animation-delay:1s;">🎵 AI #998</div>
+                    <div class="flying-ai-track top-6 px-2.5 py-1 rounded bg-purple-500/25 border border-purple-400/50 text-[10px] font-mono-code text-purple-200" style="animation-delay:1.5s;">🎵 AI #10K</div>
+                  </div>
+                </div>
+
+                <!-- Right: Spotify Platform -->
+                <div class="bg-slate-950/90 border-2 border-[#1db954]/60 rounded-2xl p-6 text-center shadow-[0_0_30px_rgba(29,185,84,0.2)]">
+                  <div class="w-14 h-14 mx-auto rounded-full bg-[#1db954] flex items-center justify-center text-slate-950 text-2xl font-black mb-3 shadow-lg">
+                    ♫
+                  </div>
+                  <div class="text-lg font-extrabold text-white">Spotify</div>
+                  <div id="spotifyUploadTag" class="text-[11px] font-mono-code text-[#1db954] mt-1">READY</div>
+                </div>
+              </div>
+
+              <!-- Downward Pan Hint -->
+              <div id="cameraPanCue" class="mt-8 text-xs font-mono-code text-amber-300/80 opacity-0 transition-opacity duration-700">
+                ▼ Meanwhile, inside the Royalty Pool... ▼
+              </div>
+            </div>
+
+            <!-- =========================================================
+                 CAMERA 2 (BOTTOM 460px): $10.99 POOL -> STRAWS -> CRACKDOWN
+                 ========================================================= -->
+            <div class="h-[460px] w-full flex flex-col items-center justify-center px-4 sm:px-6 relative">
+              <!-- Listeners Row ($10.99 / month) + Converging Gold Coins -->
+              <div class="w-full max-w-4xl flex items-center justify-around mb-3 relative">
+                <div class="px-3 py-1 rounded-full bg-amber-500/15 border border-amber-400/40 text-amber-200 text-xs font-mono-code">
+                  🎧 $10.99 / mo
+                </div>
+                <div class="px-3 py-1 rounded-full bg-amber-500/15 border border-amber-400/40 text-amber-200 text-xs font-mono-code">
+                  👥 $10.99 / mo
+                </div>
+                <div class="px-3 py-1 rounded-full bg-amber-500/15 border border-amber-400/40 text-amber-200 text-xs font-mono-code">
+                  🎧 $10.99 / mo
+                </div>
+
+                <!-- Animated Gold Coins Converging into Pool -->
+                <div id="goldCoinsRain" class="absolute inset-x-0 top-4 h-32 pointer-events-none opacity-0 transition-opacity duration-700 z-20">
+                  <span class="gold-coin-drop" style="--cx: -190px; --cy: 0px; animation-delay: 0s;">🪙</span>
+                  <span class="gold-coin-drop" style="--cx: -110px; --cy: 5px; animation-delay: 0.35s;">🪙</span>
+                  <span class="gold-coin-drop" style="--cx: -35px; --cy: -4px; animation-delay: 0.7s;">🪙</span>
+                  <span class="gold-coin-drop" style="--cx: 35px; --cy: 0px; animation-delay: 0.2s;">🪙</span>
+                  <span class="gold-coin-drop" style="--cx: 120px; --cy: 6px; animation-delay: 0.6s;">🪙</span>
+                  <span class="gold-coin-drop" style="--cx: 195px; --cy: 0px; animation-delay: 1s;">🪙</span>
+                  <span class="gold-coin-drop" style="--cx: 0px; --cy: -6px; animation-delay: 0.85s;">🪙</span>
+                </div>
+              </div>
+
+              <!-- 3-Column Stage: AI Profiteer | Shared Royalty Pool | Human Musician -->
+              <div class="grid grid-cols-3 gap-4 sm:gap-6 items-center w-full max-w-4xl">
+
+                <!-- LEFT: AI PROFITEER -->
+                <div id="scammerCard" class="bg-slate-950 border-2 border-rose-500/40 rounded-2xl p-4 text-center transition-all duration-700 relative overflow-hidden">
+                  <div id="scammerCrashOverlay" class="hidden absolute inset-0 bg-rose-600/85 backdrop-blur-[1px] z-20 flex flex-col items-center justify-center p-3">
+                    <div class="text-3xl mb-1">💥</div>
+                    <div class="font-mono-code font-black text-white text-sm tracking-wider">CRASHED</div>
+                    <div class="font-mono-code text-[10px] text-rose-100 mt-1">ACCOUNT BANNED</div>
+                  </div>
+                  <div class="text-3xl mb-1">🧑‍💻🤖</div>
+                  <div class="text-xs font-bold text-rose-300 uppercase font-mono-code">AI Uploader</div>
+                  <div class="mt-3 p-2.5 rounded-xl bg-rose-950/50 border border-rose-500/30">
+                    <div id="scammerMoneyCounter" class="text-xl sm:text-2xl font-black font-mono-code text-rose-400">$0</div>
+                  </div>
+                </div>
+
+                <!-- CENTER: GIANT TRANSPARENT GLASS POOL + BOT STRAWS + SPAM FILTER GATE -->
+                <div class="flex flex-col items-center justify-center relative">
+                  <div class="w-48 sm:w-56 h-56 rounded-3xl border-4 border-amber-200/50 bg-slate-950/85 relative overflow-hidden shadow-[0_0_40px_rgba(245,158,11,0.22)] flex flex-col justify-end">
+                    <!-- Pool Label -->
+                    <div class="absolute top-2.5 inset-x-0 text-center z-20">
+                      <span class="px-2.5 py-0.5 rounded-full bg-black/75 text-amber-300 text-[10px] font-mono-code font-bold border border-amber-400/40">
+                        Shared Royalty Pool
+                      </span>
+                    </div>
+
+                    <!-- Forest of Red Mechanical Bot Straws -->
+                    <div id="botStrawsBundle" class="absolute -top-full left-3 w-28 h-48 flex justify-between items-end z-10 transition-all duration-1000">
+                      <div class="bot-straw-pipe"></div>
+                      <div class="bot-straw-pipe"></div>
+                      <div class="bot-straw-pipe"></div>
+                      <div class="bot-straw-pipe"></div>
+                      <div class="bot-straw-pipe"></div>
+                      <div class="bot-straw-pipe"></div>
+                      <div class="bot-straw-pipe"></div>
+                      <div class="bot-straw-pipe"></div>
+                      <div class="bot-straw-pipe"></div>
+                      <div class="bot-straw-pipe"></div>
+                      <div class="bot-straw-pipe"></div>
+                      <div class="bot-straw-pipe"></div>
+                    </div>
+
+                    <!-- Real Human Artist Golden Straw -->
+                    <div id="humanGoldenStraw" class="absolute top-0 right-6 w-5 h-48 bg-gradient-to-b from-amber-200 via-amber-400 to-amber-500 rounded-b z-10 transition-all duration-1000 shadow-[0_0_14px_#f59e0b]"></div>
+
+                    <!-- Giant Metallic Spotify 【Spam Filter】 Gate -->
+                    <div id="spotifySpamGate" class="absolute inset-x-0 -top-full h-full bg-gradient-to-b from-slate-700 via-slate-800 to-slate-900 border-b-8 border-[#1db954] z-30 flex flex-col items-center justify-center p-3 text-center transition-all duration-500">
+                      <div class="text-[10px] font-mono-code text-[#1db954] font-bold tracking-widest">SPOTIFY</div>
+                      <div class="text-base sm:text-lg font-black text-white mt-0.5">【Spam Filter】</div>
+                      <div id="spamTracksDustBox" class="mt-2 px-2.5 py-1.5 rounded bg-rose-600/30 border border-rose-400/60 text-xs font-mono-code font-black text-rose-200">
+                        <span class="dust-shard">75,</span><span class="dust-shard">000,</span><span class="dust-shard">000</span>
+                        <span class="dust-shard block text-[10px] text-emerald-300 mt-0.5">SPAM TRACKS</span>
+                      </div>
+                    </div>
+
+                    <!-- Golden Liquid -->
+                    <div id="royaltyGoldLiquid" class="w-full h-[10%] bg-gradient-to-t from-amber-600 via-amber-400 to-yellow-300 transition-all duration-[1800ms] relative"></div>
+                  </div>
+                </div>
+
+                <!-- RIGHT: HUMAN MUSICIAN -->
+                <div id="humanArtistCard" class="bg-slate-950 border-2 border-amber-500/40 rounded-2xl p-4 text-center transition-all duration-700 relative">
+                  <div class="text-3xl mb-1">🎸👩‍🎤</div>
+                  <div class="text-xs font-bold text-amber-300 uppercase font-mono-code">Human Musician</div>
+                  <div class="mt-3 p-2.5 rounded-xl bg-amber-950/40 border border-amber-500/30">
+                    <div id="humanMoneyCounter" class="text-xl sm:text-2xl font-black font-mono-code text-amber-400">$2,000</div>
+                  </div>
+                  <!-- Tiny weak coins visual when dropping to $0.03 -->
+                  <div id="weakCoinsText" class="hidden mt-1.5 text-[11px] font-mono-code text-rose-400 animate-bounce">
+                    🪙 🪙 🪙
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       MODULE 5: SPOTIFY'S CHANGES (0% / 50% / 100% FADERS + CONFETTI)
+       ===================================================================== -->
+  <section id="module-5" class="module-screen">
+    <div class="max-w-5xl w-full mx-auto">
+      <div class="text-center mb-6">
+        <span class="text-xs font-mono-code uppercase tracking-widest text-emerald-400">Module 05</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold mt-1">Restore Streaming Integrity</h2>
+      </div>
+
+      <!-- HARDWARE CONSOLE UNIT -->
+      <div class="brushed-metal rounded-3xl p-6 sm:p-8 relative">
+        
+        <!-- Top Bar (Spotify's Changes) -->
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-4 mb-5 border-b border-slate-700/80">
+          <div class="flex items-center gap-3">
+            <div class="w-3 h-3 rounded-full bg-[#1db954] border border-emerald-300 shadow-[0_0_8px_#1db954]"></div>
+            <span class="font-mono-code text-xs uppercase tracking-widest text-slate-200 font-bold">
+              SPOTIFY'S CHANGES
+            </span>
+          </div>
+
+          <!-- VU Meter -->
+          <div class="flex items-center gap-3 bg-black/70 px-3.5 py-1.5 rounded-xl border border-slate-700">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-3.5 rounded-sm bg-emerald-500"></span>
+              <span class="w-2 h-3.5 rounded-sm bg-emerald-500"></span>
+              <span class="w-2 h-3.5 rounded-sm bg-amber-400"></span>
+              <span id="vuRed1" class="w-2 h-3.5 rounded-sm bg-rose-500 animate-ping"></span>
+              <span id="vuRed2" class="w-2 h-3.5 rounded-sm bg-rose-600 animate-pulse"></span>
+            </div>
+            <div id="integrityStatusText" class="text-xs font-mono-code font-bold text-rose-400">
+              INTEGRITY: 12%
+            </div>
+          </div>
+        </div>
+
+        <!-- LIVE MONITORING SCREEN -->
+        <div class="bg-[#05080f] border-2 border-slate-700 rounded-2xl p-4 mb-6 relative overflow-hidden shadow-inner">
+          <div id="monitorLaser" class="laser-line"></div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            <!-- Monitor Zone 1 -->
+            <div class="bg-slate-900/90 border border-white/10 rounded-xl p-4">
+              <div class="text-[10px] font-mono-code text-slate-400 uppercase">01 • Spam</div>
+              <div id="spamCounterDisplay" class="text-2xl font-black font-mono-code text-rose-500 mt-1">
+                75,000,000
+              </div>
+              <div id="recArrowStatus" class="mt-2 inline-block text-[11px] font-mono-code px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                ⚠️ Bot Traffic: ON
+              </div>
+            </div>
+
+            <!-- Monitor Zone 2 -->
+            <div class="bg-slate-900/90 border border-white/10 rounded-xl p-4">
+              <div class="text-[10px] font-mono-code text-slate-400 uppercase">02 • Voice</div>
+              <div id="voiceCloneDisplay" class="text-base font-bold text-rose-400 mt-1.5">
+                🎭 Clones Active
+              </div>
+              <div id="padlockBadge" class="mt-2.5 inline-block text-[11px] font-mono-code px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-white/10">
+                🔓 Unlocked
+              </div>
+            </div>
+
+            <!-- Monitor Zone 3 -->
+            <div class="bg-slate-900/90 border border-white/10 rounded-xl p-4">
+              <div class="text-[10px] font-mono-code text-slate-400 uppercase">03 • Credits</div>
+              <div id="ddexCardsZone" class="mt-2 space-y-1.5">
+                <div class="px-2.5 py-1 rounded bg-slate-800 flex justify-between items-center text-xs font-mono-code">
+                  <span>🎵 Track A</span>
+                  <span id="badgeCard1" class="text-[10px] px-1.5 py-0.5 rounded bg-rose-500/30 text-rose-200">❓ UNLABELED</span>
+                </div>
+                <div class="px-2.5 py-1 rounded bg-slate-800 flex justify-between items-center text-xs font-mono-code">
+                  <span>🎵 Track B</span>
+                  <span id="badgeCard2" class="text-[10px] px-1.5 py-0.5 rounded bg-rose-500/30 text-rose-200">❓ UNLABELED</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 3 INTERACTIVE VERTICAL FADERS (0% / 50% / 100%) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- FADER 1 -->
+          <div class="bg-slate-950/80 border border-slate-700/80 rounded-2xl p-5 flex flex-col items-center">
+            <div class="text-[11px] font-mono-code text-amber-400 font-bold uppercase mb-0.5">Fader 01</div>
+            <h4 class="text-base font-bold text-white mb-4 text-center">Spam Filter</h4>
+            
+            <div class="flex items-center gap-6 my-1">
+              <div class="flex flex-col justify-between h-[190px] text-[10px] font-mono-code text-slate-400">
+                <button onclick="setFader(1, 100)" class="hover:text-emerald-300 transition">100%</button>
+                <button onclick="setFader(1, 50)" class="hover:text-amber-300 transition">50%</button>
+                <button onclick="setFader(1, 0)" class="hover:text-rose-300 transition">0%</button>
+              </div>
+              <div class="fader-slot" onclick="handleFaderSlotClick(event, 1)" title="Click top (100%), middle (50%), or bottom (0%)">
+                <div id="faderFill1" class="fader-fill" style="height: 0%;"></div>
+                <div id="faderCap1" class="fader-cap" style="bottom: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- 0% / 50% / 100% Quick Selector -->
+            <div class="mt-4 w-full grid grid-cols-3 gap-1.5">
+              <button onclick="setFader(1, 0)" id="fader1Btn0" class="py-1.5 rounded-lg bg-rose-500/25 border border-rose-400/60 text-rose-200 text-xs font-mono-code font-bold transition">0%</button>
+              <button onclick="setFader(1, 50)" id="fader1Btn50" class="py-1.5 rounded-lg bg-slate-800 hover:bg-amber-500/30 border border-white/10 text-slate-300 text-xs font-mono-code font-bold transition">50%</button>
+              <button onclick="setFader(1, 100)" id="fader1Btn100" class="py-1.5 rounded-lg bg-slate-800 hover:bg-emerald-500/30 border border-white/10 text-slate-300 text-xs font-mono-code font-bold transition">100%</button>
+            </div>
+
+            <!-- Short Explanation of Spotify's Action -->
+            <p class="mt-3 text-xs text-slate-300 text-center leading-relaxed">
+              Spotify launched a new spam filter that removed 75 million AI spam tracks and stops bot farms from getting recommended.
+            </p>
+          </div>
+
+          <!-- FADER 2 -->
+          <div class="bg-slate-950/80 border border-slate-700/80 rounded-2xl p-5 flex flex-col items-center">
+            <div class="text-[11px] font-mono-code text-amber-400 font-bold uppercase mb-0.5">Fader 02</div>
+            <h4 class="text-base font-bold text-white mb-4 text-center">Voice Cloning Ban</h4>
+            
+            <div class="flex items-center gap-6 my-1">
+              <div class="flex flex-col justify-between h-[190px] text-[10px] font-mono-code text-slate-400">
+                <button onclick="setFader(2, 100)" class="hover:text-emerald-300 transition">100%</button>
+                <button onclick="setFader(2, 50)" class="hover:text-amber-300 transition">50%</button>
+                <button onclick="setFader(2, 0)" class="hover:text-rose-300 transition">0%</button>
+              </div>
+              <div class="fader-slot" onclick="handleFaderSlotClick(event, 2)" title="Click top (100%), middle (50%), or bottom (0%)">
+                <div id="faderFill2" class="fader-fill" style="height: 0%;"></div>
+                <div id="faderCap2" class="fader-cap" style="bottom: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- 0% / 50% / 100% Quick Selector -->
+            <div class="mt-4 w-full grid grid-cols-3 gap-1.5">
+              <button onclick="setFader(2, 0)" id="fader2Btn0" class="py-1.5 rounded-lg bg-rose-500/25 border border-rose-400/60 text-rose-200 text-xs font-mono-code font-bold transition">0%</button>
+              <button onclick="setFader(2, 50)" id="fader2Btn50" class="py-1.5 rounded-lg bg-slate-800 hover:bg-amber-500/30 border border-white/10 text-slate-300 text-xs font-mono-code font-bold transition">50%</button>
+              <button onclick="setFader(2, 100)" id="fader2Btn100" class="py-1.5 rounded-lg bg-slate-800 hover:bg-emerald-500/30 border border-white/10 text-slate-300 text-xs font-mono-code font-bold transition">100%</button>
+            </div>
+
+            <!-- Short Explanation of Spotify's Action -->
+            <p class="mt-3 text-xs text-slate-300 text-center leading-relaxed">
+              Spotify strengthened its impersonation policy to ban unauthorized AI voice clones and protect artists' vocal identities.
+            </p>
+          </div>
+
+          <!-- FADER 3 -->
+          <div class="bg-slate-950/80 border border-slate-700/80 rounded-2xl p-5 flex flex-col items-center">
+            <div class="text-[11px] font-mono-code text-amber-400 font-bold uppercase mb-0.5">Fader 03</div>
+            <h4 class="text-base font-bold text-white mb-4 text-center">DDEX AI Credits</h4>
+            
+            <div class="flex items-center gap-6 my-1">
+              <div class="flex flex-col justify-between h-[190px] text-[10px] font-mono-code text-slate-400">
+                <button onclick="setFader(3, 100)" class="hover:text-emerald-300 transition">100%</button>
+                <button onclick="setFader(3, 50)" class="hover:text-amber-300 transition">50%</button>
+                <button onclick="setFader(3, 0)" class="hover:text-rose-300 transition">0%</button>
+              </div>
+              <div class="fader-slot" onclick="handleFaderSlotClick(event, 3)" title="Click top (100%), middle (50%), or bottom (0%)">
+                <div id="faderFill3" class="fader-fill" style="height: 0%;"></div>
+                <div id="faderCap3" class="fader-cap" style="bottom: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- 0% / 50% / 100% Quick Selector -->
+            <div class="mt-4 w-full grid grid-cols-3 gap-1.5">
+              <button onclick="setFader(3, 0)" id="fader3Btn0" class="py-1.5 rounded-lg bg-rose-500/25 border border-rose-400/60 text-rose-200 text-xs font-mono-code font-bold transition">0%</button>
+              <button onclick="setFader(3, 50)" id="fader3Btn50" class="py-1.5 rounded-lg bg-slate-800 hover:bg-amber-500/30 border border-white/10 text-slate-300 text-xs font-mono-code font-bold transition">50%</button>
+              <button onclick="setFader(3, 100)" id="fader3Btn100" class="py-1.5 rounded-lg bg-slate-800 hover:bg-emerald-500/30 border border-white/10 text-slate-300 text-xs font-mono-code font-bold transition">100%</button>
+            </div>
+
+            <!-- Short Explanation of Spotify's Action -->
+            <p class="mt-3 text-xs text-slate-300 text-center leading-relaxed">
+              Spotify adopted the DDEX standard to display clear AI disclosure tags in song credits, so listeners always know.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       MODULE 6: MINIMAL BLUE FINALE SCREEN (CLEAN TOP QUOTE + CALLIGRAPHY)
+       ===================================================================== -->
+  <section id="module-6" class="module-screen finale-blue-bg relative overflow-hidden">
+    <div class="max-w-4xl w-full mx-auto text-center py-10 px-4 relative z-10">
+      
+      <!-- SMALL CLEAN QUOTE ON TOP (NON-FANCY SANS-SERIF) -->
+      <blockquote class="text-sm sm:text-base md:text-lg font-normal not-italic text-sky-200/85 max-w-2xl mx-auto leading-relaxed tracking-wide mb-7">
+        “It really is the difference between <span class="text-sky-300 font-semibold">sugar</span> and artificial sweetener.”
+      </blockquote>
+
+      <!-- Decorative Blue Divider -->
+      <div class="w-24 h-0.5 bg-gradient-to-r from-transparent via-sky-400/75 to-transparent mx-auto mb-8"></div>
+
+      <!-- LARGE CALLIGRAPHY HERO LINE -->
+      <h2 class="font-calligraphy text-6xl sm:text-7xl md:text-8xl leading-tight blue-gradient-word px-2 py-2 mb-10">
+        Keep real music alive.
+      </h2>
+
+      <!-- Blue Interactive Pledge Button -->
+      <button onclick="celebrateHumanMusic(this)" class="px-8 py-4 rounded-full bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 text-white font-black text-sm sm:text-base tracking-wide shadow-[0_0_35px_rgba(56,189,248,0.5)] hover:scale-105 transition transform">
+        ♥ I Stand With Human Composers
+      </button>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       BOTTOM BACK / NEXT NAVIGATION BAR (MODULES 2 TO 6)
+       ===================================================================== -->
+  <nav id="bottomNavBar" class="fixed bottom-0 inset-x-0 z-50 hidden bg-slate-950/90 border-t border-white/10 backdrop-blur-xl px-6 py-3.5">
+    <div class="max-w-5xl mx-auto flex items-center justify-between">
+      <button id="btnPrevModule" onclick="stepModule(-1)" class="px-5 py-2 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-bold border border-white/10 transition flex items-center gap-2">
+        <span>← Back</span>
+      </button>
+
+      <!-- Step Dots -->
+      <div class="flex items-center gap-2.5">
+        <button onclick="goToModule(1)" class="step-dot w-2.5 h-2.5 rounded-full bg-slate-600 transition" title="Module 1: Turntable"></button>
+        <button onclick="goToModule(2)" class="step-dot w-2.5 h-2.5 rounded-full bg-slate-600 transition" title="Module 2: Compare the Audios"></button>
+        <button onclick="goToModule(3)" class="step-dot w-2.5 h-2.5 rounded-full bg-slate-600 transition" title="Module 3: Quick Quiz"></button>
+        <button onclick="goToModule(4)" class="step-dot w-2.5 h-2.5 rounded-full bg-slate-600 transition" title="Module 4: Storyboard Animations"></button>
+        <button onclick="goToModule(5)" class="step-dot w-2.5 h-2.5 rounded-full bg-slate-600 transition" title="Module 5: Spotify's Changes"></button>
+        <button onclick="goToModule(6)" class="step-dot w-2.5 h-2.5 rounded-full bg-slate-600 transition" title="Module 6: Finale"></button>
+      </div>
+
+      <button id="btnNextModule" onclick="stepModule(1)" class="px-5 py-2 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs sm:text-sm font-extrabold shadow-lg shadow-amber-500/20 transition flex items-center gap-2">
+        <span id="nextBtnText">Next →</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- =====================================================================
+       JAVASCRIPT LOGIC & WEB AUDIO SYNTHESIZER
+       ===================================================================== -->
+  <script>
+    let currentModule = 1;
+    const totalModules = 6;
+
+    // Web Audio API Context for synthesized UI sound effects only
+    let audioCtx = null;
+
+    function ensureAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    // UI Sound Effect Generator
+    function playUISound(type) {
+      ensureAudioContext();
+      const now = audioCtx.currentTime;
+
+      if (type === 'correct') {
+        // Bright, pleasant two-tone upward chime
+        [587.33, 880].forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+          gain.gain.setValueAtTime(0.11, now + idx * 0.1);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.32);
+          osc.start(now + idx * 0.1);
+          osc.stop(now + idx * 0.1 + 0.34);
+        });
+        return;
+      }
+
+      if (type === 'wrong') {
+        // Low descending buzzer
+        [240, 175].forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.14);
+          gain.gain.setValueAtTime(0.08, now + idx * 0.14);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.14 + 0.22);
+          osc.start(now + idx * 0.14);
+          osc.stop(now + idx * 0.14 + 0.24);
+        });
+        return;
+      }
+
+      if (type === 'celebrate') {
+        // Bright celebratory arpeggio chime
+        [523.25, 659.25, 783.99, 1046.5].forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.085);
+          gain.gain.setValueAtTime(0.09, now + idx * 0.085);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.085 + 0.35);
+          osc.start(now + idx * 0.085);
+          osc.stop(now + idx * 0.085 + 0.36);
+        });
+        return;
+      }
+
+      if (type === 'weakCoins') {
+        // 3 faint, metallic coin clinks for $0.03
+        [0, 0.22, 0.46].forEach((offset, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(2100 + idx * 180, now + offset);
+          gain.gain.setValueAtTime(0.035, now + offset);
+          gain.gain.exponentialRampToValueAtTime(0.0008, now + offset + 0.14);
+          osc.start(now + offset);
+          osc.stop(now + offset + 0.15);
+        });
+        return;
+      }
+
+      if (type === 'gateSlam') {
+        // Heavy metallic slam + slice
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(140, now);
+        osc.frequency.exponentialRampToValueAtTime(38, now + 0.34);
+        gain.gain.setValueAtTime(0.16, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+        osc.start(now);
+        osc.stop(now + 0.4);
+        return;
+      }
+
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'click') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(520, now);
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+        osc.start(now);
+        osc.stop(now + 0.1);
+      } else if (type === 'alarm') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(260, now);
+        osc.frequency.setValueAtTime(185, now + 0.18);
+        osc.frequency.setValueAtTime(260, now + 0.36);
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+        osc.start(now);
+        osc.stop(now + 0.56);
+      } else if (type === 'coinDrop') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(1200, now);
+        osc.frequency.setValueAtTime(1650, now + 0.07);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+        osc.start(now);
+        osc.stop(now + 0.26);
+      } else if (type === 'faderLock') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+        osc.start(now);
+        osc.stop(now + 0.2);
+      }
+    }
+
+    // Handle clicking the 3D Vinyl Record
+    function handleVinylClick(e) {
+      e.stopPropagation();
+      playUISound('click');
+      if (currentModule === 1) {
+        goToModule(2);
+      } else {
+        goToModule(1);
+      }
+    }
+
+    // Navigate between Modules 1..6
+    function goToModule(target) {
+      if (target < 1 || target > totalModules) return;
+      stopAllAudioSamples();
+      clearHeistTimers();
+      currentModule = target;
+
+      // Toggle active module screen
+      for (let i = 1; i <= totalModules; i++) {
+        const el = document.getElementById(`module-${i}`);
+        if (i === currentModule) {
+          el.classList.add('active');
+        } else {
+          el.classList.remove('active');
+        }
+      }
+
+      // Morph 3D Vinyl between Center Hero (Mod 1) and Top-Left Mini Button (Mod 2-6)
+      const vinyl = document.getElementById('vinyl-wrapper');
+      const bottomNav = document.getElementById('bottomNavBar');
+      const topInd = document.getElementById('topModuleIndicator');
+      const topText = document.getElementById('topModuleText');
+      const mainBody = document.getElementById('mainBody');
+
+      if (currentModule === 1) {
+        vinyl.classList.remove('state-corner');
+        vinyl.classList.add('state-hero');
+        bottomNav.classList.add('hidden');
+        topInd.classList.add('hidden');
+        topInd.classList.remove('flex');
+        mainBody.classList.add('aurora-bg');
+      } else {
+        vinyl.classList.remove('state-hero');
+        vinyl.classList.add('state-corner');
+        bottomNav.classList.remove('hidden');
+        topInd.classList.remove('hidden');
+        topInd.classList.add('flex');
+        topText.textContent = `MODULE 0${currentModule} / 06`;
+        if (currentModule === 6) {
+          mainBody.classList.remove('aurora-bg');
+        } else {
+          mainBody.classList.add('aurora-bg');
+        }
+      }
+
+      // Update Step Dots & Next Button Label
+      const dots = document.querySelectorAll('.step-dot');
+      dots.forEach((d, idx) => {
+        if (idx + 1 === currentModule) {
+          d.className = 'step-dot w-6 h-2.5 rounded-full bg-amber-400 transition-all';
+        } else {
+          d.className = 'step-dot w-2.5 h-2.5 rounded-full bg-slate-600 hover:bg-slate-400 transition-all';
+        }
+      });
+
+      const nextBtn = document.getElementById('btnNextModule');
+      const nextText = document.getElementById('nextBtnText');
+      if (currentModule === totalModules) {
+        nextText.textContent = '↺ Restart Experience';
+        nextBtn.onclick = () => goToModule(1);
+      } else {
+        nextText.textContent = 'Next →';
+        nextBtn.onclick = () => stepModule(1);
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function stepModule(delta) {
+      playUISound('click');
+      goToModule(currentModule + delta);
+    }
+
+    /* =====================================================================
+       MODULE 2: NATIVE AUDIO PREVIEW (30 SECONDS, LOCAL MP3 FILES)
+       ===================================================================== */
+    const audioHuman = document.getElementById('audioHuman');
+    const audioAI = document.getElementById('audioAI');
+    let activeAudio = null;
+    let stopTimer = null;
+
+    function setAudioButtonState(which, playing) {
+      if (which === 'human') {
+        const icon = document.getElementById('iconPlayLeft');
+        const text = document.getElementById('textPlayLeft');
+        if (icon) icon.textContent = playing ? '⏸' : '▶';
+        if (text) text.textContent = playing ? 'Pause Audio A' : 'Play Audio A';
+      } else {
+        const icon = document.getElementById('iconPlayRight');
+        const text = document.getElementById('textPlayRight');
+        if (icon) icon.textContent = playing ? '⏸' : '▶';
+        if (text) text.textContent = playing ? 'Pause Audio B' : 'Play Audio B';
+      }
+    }
+
+    function stopAllAudioSamples() {
+      clearTimeout(stopTimer);
+      stopTimer = null;
+      [audioHuman, audioAI].forEach(a => {
+        if (!a) return;
+        try { a.pause(); a.currentTime = 0; } catch (e) {}
+      });
+      activeAudio = null;
+      setAudioButtonState('human', false);
+      setAudioButtonState('ai', false);
+    }
+
+    function toggleAudio(which) {
+      const el = which === 'human' ? audioHuman : audioAI;
+      if (!el) return;
+
+      // Same track currently playing → pause
+      if (activeAudio === el) {
+        stopAllAudioSamples();
+        return;
+      }
+
+      // Switching → stop everything first
+      stopAllAudioSamples();
+
+      try {
+        el.currentTime = 0;
+        const playPromise = el.play();
+        if (playPromise && playPromise.catch) {
+          playPromise.catch(err => {
+            console.warn('Audio play failed:', err);
+            setAudioButtonState(which, false);
+          });
+        }
+      } catch (e) {
+        console.warn('Audio play error:', e);
+        return;
+      }
+
+      activeAudio = el;
+      setAudioButtonState(which, true);
+
+      // 30-second preview limit
+      stopTimer = setTimeout(() => {
+        stopAllAudioSamples();
+      }, 30000);
+    }
+
+    /* =====================================================================
+       MODULE 3: QUICK-FIRE QUIZ LOGIC (CORRECT / WRONG SOUNDS)
+       ===================================================================== */
+    function answerQuiz(isCorrect, btn) {
+      playUISound(isCorrect ? 'correct' : 'wrong');
+      const box = document.getElementById('quizFeedback');
+      const title = document.getElementById('quizFeedbackTitle');
+
+      document.querySelectorAll('.quiz-opt').forEach(b => {
+        b.classList.remove('border-emerald-400', 'border-rose-500');
+      });
+
+      box.classList.remove('hidden', 'bg-emerald-950/60', 'border-emerald-400', 'bg-rose-950/60', 'border-rose-500');
+
+      if (isCorrect) {
+        btn.classList.add('border-emerald-400');
+        box.classList.add('bg-emerald-950/60', 'border-emerald-400');
+        title.className = 'text-lg font-extrabold mb-3 text-emerald-300';
+        title.textContent = '✅ Spot On! You Heard the Human Soul Behind Audio A.';
+      } else {
+        btn.classList.add('border-rose-500');
+        box.classList.add('bg-rose-950/60', 'border-rose-500');
+        title.className = 'text-lg font-extrabold mb-3 text-rose-300';
+        title.textContent = '⚠️ You are wrong! Actually, Audio A is Human and Audio B is AI.';
+      }
+    }
+
+    /* =====================================================================
+       MODULE 4: ANIMATION SCENE 1 & SCENE 2
+       ===================================================================== */
+    function switchStoryScene(sceneNum) {
+      playUISound('click');
+      clearHeistTimers();
+      const s1 = document.getElementById('storyScene1');
+      const s2 = document.getElementById('storyScene2');
+      const t1 = document.getElementById('tabScene1');
+      const t2 = document.getElementById('tabScene2');
+
+      if (sceneNum === 1) {
+        s1.classList.remove('hidden');
+        s2.classList.add('hidden');
+        t1.className = 'px-5 py-2.5 rounded-full font-bold text-sm bg-rose-500 text-white shadow-lg shadow-rose-500/30 transition';
+        t2.className = 'px-5 py-2.5 rounded-full font-bold text-sm bg-slate-800 text-slate-300 hover:bg-slate-700 border border-white/10 transition';
+      } else {
+        s1.classList.add('hidden');
+        s2.classList.remove('hidden');
+        t2.className = 'px-5 py-2.5 rounded-full font-bold text-sm bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/30 transition';
+        t1.className = 'px-5 py-2.5 rounded-full font-bold text-sm bg-slate-800 text-slate-300 hover:bg-slate-700 border border-white/10 transition';
+      }
+    }
+
+    // Scene 1: "Taylor Swift" Explodes -> Each Letter Transforms into a Matching Style Label
+    let taylorAnimTimers = [];
+
+    function runTaylorSwiftAnimation() {
+      taylorAnimTimers.forEach(t => clearTimeout(t));
+      taylorAnimTimers = [];
+
+      playUISound('alarm');
+      const letters = document.querySelectorAll('#taylorLetters .shatter-letter');
+      const alertBox = document.getElementById('copyrightAlertBox');
+      const row1 = document.getElementById('letterLabelsRow1');
+      const row2 = document.getElementById('letterLabelsRow2');
+
+      const taylorMap = [
+        { letter: 'T', label: 'Teenage Heartbreak' },
+        { letter: 'A', label: 'Acoustic Guitar' },
+        { letter: 'Y', label: 'Yearning Melody' },
+        { letter: 'L', label: 'Late-Night Diary' },
+        { letter: 'O', label: 'Orchestral Strings' },
+        { letter: 'R', label: 'Romantic Storytelling' }
+      ];
+
+      const swiftMap = [
+        { letter: 'S', label: 'Sentimental Pop' },
+        { letter: 'W', label: 'Warm Female Vocal' },
+        { letter: 'I', label: 'Intimate Ballad' },
+        { letter: 'F', label: 'Folk-Pop Crossover' },
+        { letter: 'T', label: 'Tender Chorus' }
+      ];
+
+      // Reset letters and label rows
+      letters.forEach(l => {
+        l.style.transform = 'translate(0, 0) rotate(0deg) scale(1)';
+        l.style.opacity = '1';
+      });
+      row1.innerHTML = '';
+      row2.innerHTML = '';
+      alertBox.classList.remove('hidden');
+
+      // Step 1: Violently explode the 11 letters of "Taylor Swift"
+      taylorAnimTimers.push(setTimeout(() => {
+        letters.forEach(l => {
+          const rx = (Math.random() - 0.5) * 320;
+          const ry = (Math.random() - 0.5) * 160 - 20;
+          const rot = (Math.random() - 0.5) * 360;
+          l.style.transform = `translate(${rx}px, ${ry}px) rotate(${rot}deg) scale(0.25)`;
+          l.style.opacity = '0';
+        });
+      }, 350));
+
+      // Step 2: Populate & stagger-reveal each exploded letter as its corresponding style label
+      taylorAnimTimers.push(setTimeout(() => {
+        const makePillHTML = (item) => `
+          <div class="letter-label-pill flex items-center gap-2 px-3.5 py-2 rounded-full bg-slate-800/95 border border-amber-400/40 shadow-[0_0_20px_rgba(245,158,11,0.18)]">
+            <span class="w-6 h-6 rounded-full bg-amber-400 text-slate-950 font-mono-code font-black text-xs flex items-center justify-center shrink-0">
+              ${item.letter}
+            </span>
+            <span class="text-slate-400 font-mono-code text-xs">→</span>
+            <span class="text-slate-100 font-mono-code text-xs font-semibold">${item.label}</span>
+          </div>
+        `;
+
+        row1.innerHTML = taylorMap.map(makePillHTML).join('');
+        row2.innerHTML = swiftMap.map(makePillHTML).join('');
+
+        const allPills = document.querySelectorAll('#tagPillsZone .letter-label-pill');
+        allPills.forEach((pill, idx) => {
+          taylorAnimTimers.push(setTimeout(() => {
+            pill.classList.add('revealed');
+            if (idx % 3 === 0) playUISound('click');
+          }, idx * 95));
+        });
+      }, 850));
+    }
+
+    // Scene 2: Full 5-Beat Cinematic Royalty Heist & Spotify Spam Filter Crackdown (Slower Pacing)
+    let heistAnimTimers = [];
+    let heistIntervals = [];
+
+    function clearHeistTimers() {
+      heistAnimTimers.forEach(t => clearTimeout(t));
+      heistIntervals.forEach(iv => clearInterval(iv));
+      heistAnimTimers = [];
+      heistIntervals = [];
+    }
+
+    function animateNumber(el, from, to, duration, formatter) {
+      const start = performance.now();
+      const iv = setInterval(() => {
+        const progress = Math.min(1, (performance.now() - start) / duration);
+        const val = from + (to - from) * progress;
+        el.textContent = formatter(val);
+        if (progress >= 1) clearInterval(iv);
+      }, 30);
+      heistIntervals.push(iv);
+    }
+
+    function runRoyaltyHeistAnimation() {
+      clearHeistTimers();
+      playUISound('click');
+
+      const viewport = document.getElementById('heistViewport');
+      const camera = document.getElementById('heistCameraTrack');
+      const aiGenCounter = document.getElementById('aiGenCounter');
+      const flyingStream = document.getElementById('flyingTracksStream');
+      const spotifyTag = document.getElementById('spotifyUploadTag');
+      const panCue = document.getElementById('cameraPanCue');
+      const coinsRain = document.getElementById('goldCoinsRain');
+      const liquid = document.getElementById('royaltyGoldLiquid');
+      const strawsBundle = document.getElementById('botStrawsBundle');
+      const strawPipes = document.querySelectorAll('#botStrawsBundle .bot-straw-pipe');
+      const humanStraw = document.getElementById('humanGoldenStraw');
+      const scammerCard = document.getElementById('scammerCard');
+      const scammerOverlay = document.getElementById('scammerCrashOverlay');
+      const scammerMoney = document.getElementById('scammerMoneyCounter');
+      const humanCard = document.getElementById('humanArtistCard');
+      const humanMoney = document.getElementById('humanMoneyCounter');
+      const weakCoins = document.getElementById('weakCoinsText');
+      const alarmBanner = document.getElementById('heistRedAlarmBanner');
+      const gate = document.getElementById('spotifySpamGate');
+      const dustShards = document.querySelectorAll('#spamTracksDustBox .dust-shard');
+
+      // ---- RESET ALL VISUALS ----
+      viewport.classList.remove('alarm-active');
+      alarmBanner.classList.add('hidden');
+      camera.style.transform = 'translateY(0px)';
+      flyingStream.style.opacity = '1';
+      spotifyTag.textContent = 'UPLOADING...';
+      panCue.style.opacity = '0';
+      coinsRain.style.opacity = '0';
+      liquid.style.height = '10%';
+      strawsBundle.style.top = '-100%';
+      strawPipes.forEach(p => p.classList.remove('severed'));
+      humanStraw.style.width = '20px';
+      humanStraw.style.opacity = '1';
+      scammerCard.className = 'bg-slate-950 border-2 border-rose-500/40 rounded-2xl p-4 text-center transition-all duration-700 relative overflow-hidden';
+      scammerCard.style.opacity = '1';
+      scammerOverlay.classList.add('hidden');
+      scammerMoney.textContent = '$0';
+      humanCard.className = 'bg-slate-950 border-2 border-amber-500/40 rounded-2xl p-4 text-center transition-all duration-700 relative';
+      humanMoney.textContent = '$2,000';
+      humanMoney.className = 'text-xl sm:text-2xl font-black font-mono-code text-amber-400';
+      weakCoins.classList.add('hidden');
+      gate.style.top = '-100%';
+      dustShards.forEach(s => {
+        s.style.transform = 'translate(0,0) scale(1)';
+        s.style.opacity = '1';
+      });
+
+      // ---- BEAT 1 (0s): AI MASS-GENERATING & PUBLISHING TO SPOTIFY ----
+      animateNumber(aiGenCounter, 0, 10000, 2800, v => `${Math.floor(v).toLocaleString()} tracks`);
+      heistAnimTimers.push(setTimeout(() => {
+        spotifyTag.textContent = '10,000+ LIVE';
+        panCue.style.opacity = '1';
+      }, 2400));
+
+      // ---- BEAT 2 (3.8s): CAMERA PANS DOWN + $10.99 COINS FILL SHARED ROYALTY POOL ----
+      heistAnimTimers.push(setTimeout(() => {
+        camera.style.transform = 'translateY(-460px)';
+        coinsRain.style.opacity = '1';
+        playUISound('coinDrop');
+      }, 3800));
+
+      heistAnimTimers.push(setTimeout(() => {
+        liquid.style.height = '82%';
+        playUISound('coinDrop');
+      }, 4800));
+
+      // ---- BEAT 3 (7.4s): RED BOT STRAWS PLUNGE IN & DRAIN POOL (+$85,000) ----
+      heistAnimTimers.push(setTimeout(() => {
+        strawsBundle.style.top = '0%';
+        scammerCard.classList.add('border-rose-500', 'shadow-[0_0_30px_rgba(244,63,94,0.45)]');
+        liquid.style.height = '14%';
+        animateNumber(scammerMoney, 0, 85000, 2500, v => `+$${Math.floor(v).toLocaleString()}`);
+        playUISound('coinDrop');
+      }, 7400));
+
+      // ---- BEAT 4 (10.8s): CUT TO HUMAN MUSICIAN -> STRAW SHRIVELS, $2,000 -> $0.03 ----
+      heistAnimTimers.push(setTimeout(() => {
+        scammerCard.style.opacity = '0.55';
+        humanCard.classList.add('scale-105', 'border-amber-400', 'shadow-[0_0_35px_rgba(245,158,11,0.45)]');
+        humanStraw.style.width = '2px';
+        humanStraw.style.opacity = '0.45';
+        humanMoney.textContent = '$0.03';
+        humanMoney.className = 'text-xl sm:text-2xl font-black font-mono-code text-rose-400';
+        weakCoins.classList.remove('hidden');
+        playUISound('weakCoins');
+      }, 10800));
+
+      // ---- BEAT 5 (14.2s): RED CRASH ALARM + SPOTIFY 【SPAM FILTER】 GATE SLAMS & SHATTERS 75M ----
+      heistAnimTimers.push(setTimeout(() => {
+        scammerCard.style.opacity = '1';
+        humanCard.classList.remove('scale-105', 'shadow-[0_0_35px_rgba(245,158,11,0.45)]');
+        viewport.classList.add('alarm-active');
+        alarmBanner.classList.remove('hidden');
+        scammerCard.classList.add('crash-shake', 'border-rose-600');
+        scammerOverlay.classList.remove('hidden');
+        playUISound('alarm');
+      }, 14200));
+
+      heistAnimTimers.push(setTimeout(() => {
+        gate.style.top = '0%';
+        playUISound('gateSlam');
+        strawPipes.forEach(p => p.classList.add('severed'));
+        // Restore pool & human straw
+        liquid.style.height = '80%';
+        humanStraw.style.width = '20px';
+        humanStraw.style.opacity = '1';
+        humanMoney.textContent = '$2,000';
+        humanMoney.className = 'text-xl sm:text-2xl font-black font-mono-code text-emerald-400';
+        weakCoins.classList.add('hidden');
+      }, 15500));
+
+      // Shatter 75,000,000 spam tracks into dust
+      heistAnimTimers.push(setTimeout(() => {
+        dustShards.forEach(s => {
+          const rx = (Math.random() - 0.5) * 180;
+          const ry = (Math.random() - 0.5) * 120;
+          const rot = (Math.random() - 0.5) * 180;
+          s.style.transform = `translate(${rx}px, ${ry}px) rotate(${rot}deg) scale(0.2)`;
+          s.style.opacity = '0';
+        });
+        viewport.classList.remove('alarm-active');
+        alarmBanner.classList.add('hidden');
+        coinsRain.style.opacity = '0';
+      }, 17300));
+    }
+
+    /* =====================================================================
+       MODULE 5: 3 INTERACTIVE VERTICAL FADERS (0% / 50% / 100% + CONFETTI)
+       ===================================================================== */
+    const faderState = { 1: 0, 2: 0, 3: 0 };
+    let wasAllMaxed = false;
+
+    function launchConfetti() {
+      const container = document.getElementById('confetti-container');
+      const colors = ['#1db954', '#34d399', '#fbbf24', '#38bdf8', '#f472b6', '#a78bfa', '#ffffff'];
+
+      for (let i = 0; i < 85; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        const size = 6 + Math.random() * 8;
+        piece.style.width = `${size}px`;
+        piece.style.height = `${size * (0.5 + Math.random() * 0.9)}px`;
+        piece.style.left = `${Math.random() * 100}vw`;
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.setProperty('--drift', `${(Math.random() - 0.5) * 260}px`);
+        piece.style.setProperty('--spin', `${(Math.random() - 0.5) * 900}deg`);
+        piece.style.setProperty('--dur', `${2.2 + Math.random() * 1.8}s`);
+        piece.style.animationDelay = `${Math.random() * 0.4}s`;
+        container.appendChild(piece);
+        setTimeout(() => piece.remove(), 4600);
+      }
+    }
+
+    function handleFaderSlotClick(event, num) {
+      const rect = event.currentTarget.getBoundingClientRect();
+      const clickY = event.clientY - rect.top;
+      const ratioFromBottom = 1 - clickY / rect.height;
+
+      if (ratioFromBottom >= 0.67) {
+        setFader(num, 100);
+      } else if (ratioFromBottom >= 0.33) {
+        setFader(num, 50);
+      } else {
+        setFader(num, 0);
+      }
+    }
+
+    function setFader(num, val) {
+      faderState[num] = val;
+      playUISound(val === 100 ? 'faderLock' : 'click');
+
+      const fill = document.getElementById(`faderFill${num}`);
+      const cap = document.getElementById(`faderCap${num}`);
+
+      // Update fader bar & cap position/styles
+      fill.classList.remove('half', 'maxed');
+      cap.classList.remove('half', 'maxed');
+
+      if (val === 0) {
+        fill.style.height = '0%';
+        cap.style.bottom = '0%';
+      } else if (val === 50) {
+        fill.style.height = '50%';
+        cap.style.bottom = '46%';
+        fill.classList.add('half');
+        cap.classList.add('half');
+      } else {
+        fill.style.height = '100%';
+        cap.style.bottom = '92%';
+        fill.classList.add('maxed');
+        cap.classList.add('maxed');
+      }
+
+      // Highlight active 0% / 50% / 100% button
+      [0, 50, 100].forEach(level => {
+        const b = document.getElementById(`fader${num}Btn${level}`);
+        if (!b) return;
+        if (level === val) {
+          if (level === 0) {
+            b.className = 'py-1.5 rounded-lg bg-rose-500/25 border border-rose-400/60 text-rose-200 text-xs font-mono-code font-bold transition';
+          } else if (level === 50) {
+            b.className = 'py-1.5 rounded-lg bg-amber-400 text-slate-950 border border-amber-300 text-xs font-mono-code font-black transition';
+          } else {
+            b.className = 'py-1.5 rounded-lg bg-emerald-500 text-slate-950 border border-emerald-400 text-xs font-mono-code font-black transition';
+          }
+        } else {
+          b.className = 'py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-white/10 text-slate-300 text-xs font-mono-code font-bold transition';
+        }
+      });
+
+      // Specific Monitor Visual Feedback per Fader (0%, 50%, 100%)
+      if (num === 1) {
+        const counter = document.getElementById('spamCounterDisplay');
+        const arrow = document.getElementById('recArrowStatus');
+        if (val === 0) {
+          counter.textContent = '75,000,000';
+          counter.className = 'text-2xl font-black font-mono-code text-rose-500 mt-1';
+          arrow.textContent = '⚠️ Bot Traffic: ON';
+          arrow.className = 'mt-2 inline-block text-[11px] font-mono-code px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30';
+        } else if (val === 50) {
+          counter.textContent = '37,500,000';
+          counter.className = 'text-2xl font-black font-mono-code text-amber-400 mt-1';
+          arrow.textContent = '⚡ Filtering: 50%';
+          arrow.className = 'mt-2 inline-block text-[11px] font-mono-code px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40';
+        } else {
+          const laser = document.getElementById('monitorLaser');
+          laser.classList.remove('sweeping');
+          void laser.offsetWidth;
+          laser.classList.add('sweeping');
+          counter.textContent = '0 PURGED';
+          counter.className = 'text-2xl font-black font-mono-code text-emerald-400 mt-1';
+          arrow.textContent = '✂️ Blocked';
+          arrow.className = 'mt-2 inline-block text-[11px] font-mono-code px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+        }
+      } else if (num === 2) {
+        const vox = document.getElementById('voiceCloneDisplay');
+        const lock = document.getElementById('padlockBadge');
+        if (val === 0) {
+          vox.textContent = '🎭 Clones Active';
+          vox.className = 'text-base font-bold text-rose-400 mt-1.5';
+          lock.textContent = '🔓 Unlocked';
+          lock.className = 'mt-2.5 inline-block text-[11px] font-mono-code px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-white/10';
+        } else if (val === 50) {
+          vox.textContent = '🛡️ Scanning Voices...';
+          vox.className = 'text-base font-bold text-amber-400 mt-1.5';
+          lock.textContent = '🔐 Half-Locked';
+          lock.className = 'mt-2.5 inline-block text-[11px] font-mono-code px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40';
+        } else {
+          vox.textContent = '🎙️ Human Verified';
+          vox.className = 'text-base font-bold text-emerald-400 mt-1.5';
+          lock.textContent = '🔒 Locked';
+          lock.className = 'mt-2.5 inline-block text-[11px] font-mono-code px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+        }
+      } else if (num === 3) {
+        const b1 = document.getElementById('badgeCard1');
+        const b2 = document.getElementById('badgeCard2');
+        if (val === 0) {
+          b1.textContent = '❓ UNLABELED';
+          b1.className = 'text-[10px] px-1.5 py-0.5 rounded bg-rose-500/30 text-rose-200';
+          b2.textContent = '❓ UNLABELED';
+          b2.className = 'text-[10px] px-1.5 py-0.5 rounded bg-rose-500/30 text-rose-200';
+        } else if (val === 50) {
+          b1.textContent = '[AI]';
+          b1.className = 'text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/30 text-cyan-200 border border-cyan-400/50 font-bold';
+          b2.textContent = '⏳ PENDING';
+          b2.className = 'text-[10px] px-1.5 py-0.5 rounded bg-amber-500/30 text-amber-200 border border-amber-400/40 font-bold';
+        } else {
+          b1.textContent = '[AI]';
+          b1.className = 'text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/30 text-cyan-200 border border-cyan-400/50 font-bold';
+          b2.textContent = '[HUMAN]';
+          b2.className = 'text-[10px] px-1.5 py-0.5 rounded bg-amber-500/30 text-amber-200 border border-amber-400/50 font-bold';
+        }
+      }
+
+      // Update Overall Integrity Percentage & VU Meter
+      const sum = faderState[1] + faderState[2] + faderState[3];
+      const integrityPct = Math.round(12 + (sum / 300) * 88);
+      const statusText = document.getElementById('integrityStatusText');
+      const vu1 = document.getElementById('vuRed1');
+      const vu2 = document.getElementById('vuRed2');
+
+      if (sum === 300) {
+        statusText.textContent = '🎉 INTEGRITY: 100%';
+        statusText.className = 'text-xs font-mono-code font-bold text-emerald-400';
+        vu1.className = 'w-2 h-3.5 rounded-sm bg-emerald-400';
+        vu2.className = 'w-2 h-3.5 rounded-sm bg-emerald-400';
+        if (!wasAllMaxed) {
+          wasAllMaxed = true;
+          launchConfetti();
+          playUISound('celebrate');
+        }
+      } else {
+        wasAllMaxed = false;
+        statusText.textContent = `INTEGRITY: ${integrityPct}%`;
+        if (integrityPct >= 50) {
+          statusText.className = 'text-xs font-mono-code font-bold text-amber-400';
+          vu1.className = 'w-2 h-3.5 rounded-sm bg-amber-400';
+          vu2.className = 'w-2 h-3.5 rounded-sm bg-rose-500 animate-pulse';
+        } else {
+          statusText.className = 'text-xs font-mono-code font-bold text-rose-400';
+          vu1.className = 'w-2 h-3.5 rounded-sm bg-rose-500 animate-ping';
+          vu2.className = 'w-2 h-3.5 rounded-sm bg-rose-600 animate-pulse';
+        }
+      }
+    }
+
+    /* =====================================================================
+       MODULE 6: FINALE CELEBRATION (BLUE THEME)
+       ===================================================================== */
+    function celebrateHumanMusic(btn) {
+      playUISound('celebrate');
+      launchConfetti();
+      btn.textContent = '✨ Thank You for Keeping Music Human ✨';
+      btn.className = 'px-8 py-4 rounded-full bg-sky-300 text-slate-950 font-black text-sm sm:text-base tracking-wide shadow-[0_0_40px_rgba(56,189,248,0.75)] transition';
+    }
+  </script>
+</body>
+</html>
